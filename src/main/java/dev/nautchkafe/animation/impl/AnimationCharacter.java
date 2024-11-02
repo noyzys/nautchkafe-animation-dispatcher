@@ -19,5 +19,5 @@ public final class AnimationCharacter {
     /**
      * SPINNING_CHARACTERS represents sequences of characters used for simulating a spinning animation.
      */
-    public static final List<String> SPINNING_CHARACTERS = List.of("/", "-", "\\", "|");
+    public static final List<String> SPINNING_CHARACTERS = List.of("|", "/", "-", "\\");
 }
