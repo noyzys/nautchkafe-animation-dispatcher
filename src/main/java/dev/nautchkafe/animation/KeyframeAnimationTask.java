@@ -81,8 +81,11 @@ final class KeyframeAnimationTask extends BukkitRunnable {
      * @return List of created keyframes based on configuration.
      */
     private static List<Keyframe> createKeyframes(final KeyframeAnimationMessageConfig config) {
-        return List.range(0, config.numberOfFrames())
-                .map(i -> new Keyframe(config.titleMessage(), config.subtitleMessage() + " " + config.character()));
+        final String subtitleWithCharacter = config.subtitleMessage() + " " + config.character();
+        final int keyframeLimit = Math.min(config.numberOfFrames(), 100);
+
+        return List.range(0, keyframeLimit)
+                .map(i -> new Keyframe(config.titleMessage(), subtitleWithCharacter));
     }
 
     /**
