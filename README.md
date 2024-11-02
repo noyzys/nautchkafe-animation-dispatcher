@@ -33,10 +33,10 @@ KeyframeAnimationDispatcher.of(player, config,
 # Additional Implementations
 ### In addition to the primary implementation, several example animations have also been provided, such as:
 
-- [Countdown Animation]()
-- [Custom Character Animation]()
-- [Loading Progress Animation]()
-- [Spinning Slash Animation]()
-- [Wobble Text Animation]()
+- [Countdown Animation](https://github.com/noyzys/nautchkafe-animation-dispatcher/blob/main/src/main/java/dev/nautchkafe/animation/impl/CountdownAnimation.java)
+- [Custom Character Animation](https://github.com/noyzys/nautchkafe-animation-dispatcher/blob/main/src/main/java/dev/nautchkafe/animation/impl/CustomCharacterAnimation.java)
+- [Loading Progress Animation](https://github.com/noyzys/nautchkafe-animation-dispatcher/blob/main/src/main/java/dev/nautchkafe/animation/impl/LoadingProgressAnimation.java)
+- [Spinning Slash Animation](https://github.com/noyzys/nautchkafe-animation-dispatcher/blob/main/src/main/java/dev/nautchkafe/animation/impl/SpinningSlashAnimation.java)
+- [Wobble Text Animation](https://github.com/noyzys/nautchkafe-animation-dispatcher/blob/main/src/main/java/dev/nautchkafe/animation/impl/WobbleTextAnimation.java)
 
 **If you are interested in exploring functional programming and its applications within this project visit the repository at [vavr-in-action](github.com/noyzys/bukkit-vavr-in-action), [fp-concepts](github.com/noyzys/fp-concepts).**
