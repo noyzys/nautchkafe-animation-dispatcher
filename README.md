@@ -39,4 +39,4 @@ KeyframeAnimationDispatcher.of(player, config,
 - [Spinning Slash Animation](https://github.com/noyzys/nautchkafe-animation-dispatcher/blob/main/src/main/java/dev/nautchkafe/animation/impl/SpinningSlashAnimation.java)
 - [Wobble Text Animation](https://github.com/noyzys/nautchkafe-animation-dispatcher/blob/main/src/main/java/dev/nautchkafe/animation/impl/WobbleTextAnimation.java)
 
-**If you are interested in exploring functional programming and its applications within this project visit the repository at [vavr-in-action](github.com/noyzys/bukkit-vavr-in-action), [fp-concepts](github.com/noyzys/fp-concepts).**
+**If you are interested in exploring functional programming and its applications within this project visit the repository at [vavr-in-action](github.com/noyzys/bukkit-vavr-in-action), [fp-practice](github.com/noyzys/fp-practice).**
