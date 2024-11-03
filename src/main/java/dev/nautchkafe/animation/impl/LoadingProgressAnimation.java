@@ -22,9 +22,12 @@ import java.util.function.Supplier;
 public final class LoadingProgressAnimation implements KeyframeAnimation {
 
     private final KeyframeAnimationMessageConfig messageConfig;
+    private final KeyframeAnimationPlugin plugin;
 
-    public LoadingProgressAnimation(final KeyframeAnimationMessageConfig messageConfig) {
+    public LoadingProgressAnimation(final KeyframeAnimationMessageConfig messageConfig,
+                                    final KeyframeAnimationPlugin plugin) {
         this.messageConfig = messageConfig;
+        this.plugin = plugin;
     }
 
     /**
@@ -58,17 +61,17 @@ public final class LoadingProgressAnimation implements KeyframeAnimation {
      * <p>This method handles any {@link Throwable} during the frame dispatch process
      * and prints the stack trace to standard error.
      *
-     * @param player the player to whom the animation frames are to be displayed
+     * @param player    the player to whom the animation frames are to be displayed
      * @param tickDelay the delay between each tick/frame of the animation
-     * @param renderer the renderer utilized for rendering each keyframe
+     * @param renderer  the renderer utilized for rendering each keyframe
      */
     @Override
     public void display(final Player player, final Duration tickDelay, final KeyframeRenderer renderer) {
         Try.run(() -> {
             final List<Keyframe> keyframes = frames(messageConfig.numberOfFrames()).get();
-            KeyframeAnimationDispatcher.of(player, keyframes, renderer, tickDelay).dispatch();
-        }).onFailure(throwable -> {
-            throwable.printStackTrace();
-        });
+
+            final KeyframeAnimationDispatcher it = KeyframeAnimationDispatcher.of(player, keyframes, renderer, tickDelay, plugin);
+            it.dispatch();
+        }).onFailure(e -> KeyframeLogger.logInfo("> Error in Loading Animation" + e.getMessage()));
     }
 }

@@ -1,11 +1,8 @@
 package dev.nautchkafe.animation.impl;
 
-import dev.nautchkafe.animation.Keyframe;
-import dev.nautchkafe.animation.KeyframeAnimation;
-import dev.nautchkafe.animation.KeyframeAnimationDispatcher;
-import dev.nautchkafe.animation.KeyframeAnimationMessageConfig;
-import dev.nautchkafe.animation.KeyframeRenderer;
+import dev.nautchkafe.animation.*;
 import io.vavr.collection.List;
+import io.vavr.control.Try;
 import org.bukkit.entity.Player;
 
 import java.time.Duration;
@@ -18,9 +15,12 @@ import java.util.function.Supplier;
 public final class CustomCharacterAnimation implements KeyframeAnimation {
 
     private final KeyframeAnimationMessageConfig messageConfig;
+    private final KeyframeAnimationPlugin plugin;
 
-    public CustomCharacterAnimation(final KeyframeAnimationMessageConfig messageConfig) {
+    public CustomCharacterAnimation(final KeyframeAnimationMessageConfig messageConfig,
+                                    final KeyframeAnimationPlugin plugin) {
         this.messageConfig = messageConfig;
+        this.plugin = plugin;
     }
 
     /**
@@ -40,12 +40,17 @@ public final class CustomCharacterAnimation implements KeyframeAnimation {
     /**
      * Displays the animation to a player with a specified tick delay between keyframes.
      *
-     * @param player the player to whom the animation will be displayed.
+     * @param player    the player to whom the animation will be displayed.
      * @param tickDelay the duration of delay between the display of each keyframe.
-     * @param renderer the renderer that displays the keyframe to the player.
+     * @param renderer  the renderer that displays the keyframe to the player.
      */
     @Override
     public void display(final Player player, final Duration tickDelay, final KeyframeRenderer renderer) {
-        KeyframeAnimationDispatcher.of(player, messageConfig, renderer, tickDelay).dispatch();
+        Try.run(() -> {
+            final List<Keyframe> keyframes = frames(messageConfig.numberOfFrames()).get();
+
+            final KeyframeAnimationDispatcher it = KeyframeAnimationDispatcher.of(player, keyframes, renderer, tickDelay, plugin);
+            it.dispatch();
+        }).onFailure(e -> KeyframeLogger.logInfo("> Error in Custom character Animation" + e.getMessage()));
     }
 }

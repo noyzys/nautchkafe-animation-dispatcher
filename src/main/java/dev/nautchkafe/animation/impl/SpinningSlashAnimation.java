@@ -1,10 +1,6 @@
 package dev.nautchkafe.animation.impl;
 
-import dev.nautchkafe.animation.Keyframe;
-import dev.nautchkafe.animation.KeyframeAnimation;
-import dev.nautchkafe.animation.KeyframeAnimationDispatcher;
-import dev.nautchkafe.animation.KeyframeAnimationMessageConfig;
-import dev.nautchkafe.animation.KeyframeRenderer;
+import dev.nautchkafe.animation.*;
 import io.vavr.collection.List;
 import org.bukkit.entity.Player;
 
@@ -19,9 +15,12 @@ import io.vavr.control.Try;
 public final class SpinningSlashAnimation implements KeyframeAnimation {
 
     private final KeyframeAnimationMessageConfig messageConfig;
+    private final KeyframeAnimationPlugin plugin;
 
-    public SpinningSlashAnimation(final KeyframeAnimationMessageConfig messageConfig) {
+    public SpinningSlashAnimation(final KeyframeAnimationMessageConfig messageConfig,
+                                  final KeyframeAnimationPlugin plugin) {
         this.messageConfig = messageConfig;
+        this.plugin = plugin;
     }
 
     /**
@@ -59,10 +58,10 @@ public final class SpinningSlashAnimation implements KeyframeAnimation {
     public void display(final Player player, final Duration tickDelay, final KeyframeRenderer renderer) {
         Try.run(() -> {
             final List<Keyframe> keyframes = frames(messageConfig.numberOfFrames()).get();
-            KeyframeAnimationDispatcher.of(player, keyframes, renderer, tickDelay).dispatch();
-        }).onFailure(throwable -> {
-            throwable.printStackTrace();
-        });
+
+            final KeyframeAnimationDispatcher it = KeyframeAnimationDispatcher.of(player, keyframes, renderer, tickDelay, plugin);
+            it.dispatch();
+        }).onFailure(e -> KeyframeLogger.logInfo("> Error in Spinning slash Animation" + e.getMessage()));
     }
 }
 

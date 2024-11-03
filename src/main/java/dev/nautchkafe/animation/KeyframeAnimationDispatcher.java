@@ -14,14 +14,15 @@ public final class KeyframeAnimationDispatcher {
     private final List<Keyframe> keyframes;
     private final KeyframeRenderer renderer;
     private final Duration tickDelay;
-    private KeyframeAnimationPlugin plugin;
+    private final KeyframeAnimationPlugin plugin;
 
     private KeyframeAnimationDispatcher(final Player player, final List<Keyframe> keyframes, final KeyframeRenderer renderer,
-                                        final Duration tickDelay) {
+                                        final Duration tickDelay, final KeyframeAnimationPlugin plugin) {
         this.player = player;
         this.keyframes = keyframes;
         this.renderer = renderer;
         this.tickDelay = tickDelay;
+        this.plugin = plugin;
     }
 
     /**
@@ -34,9 +35,10 @@ public final class KeyframeAnimationDispatcher {
      * @return A new KeyframeAnimationDispatcher instance.
      */
     public static KeyframeAnimationDispatcher of(final Player player, final KeyframeAnimationMessageConfig config,
-                                                 final KeyframeRenderer renderer, final Duration tickDelay) {
-        List<Keyframe> keyframes = createKeyframes(config);
-        return new KeyframeAnimationDispatcher(player, keyframes, renderer, tickDelay);
+                                                 final KeyframeRenderer renderer, final Duration tickDelay,
+                                                 final KeyframeAnimationPlugin plugin) {
+        final List<Keyframe> keyframes = config.customKeyframes();
+        return new KeyframeAnimationDispatcher(player, keyframes, renderer, tickDelay, plugin);
     }
 
     /**
@@ -49,8 +51,9 @@ public final class KeyframeAnimationDispatcher {
      * @return A new KeyframeAnimationDispatcher instance.
      */
     public static KeyframeAnimationDispatcher of(final Player player, final List<Keyframe> keyframes,
-                                                 final KeyframeRenderer renderer, final Duration tickDelay) {
-        return new KeyframeAnimationDispatcher(player, keyframes, renderer, tickDelay);
+                                                 final KeyframeRenderer renderer, final Duration tickDelay,
+                                                 final KeyframeAnimationPlugin plugin) {
+        return new KeyframeAnimationDispatcher(player, keyframes, renderer, tickDelay, plugin);
     }
 
     /**

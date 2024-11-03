@@ -15,9 +15,12 @@ import java.util.function.Supplier;
 public final class CountdownAnimation implements KeyframeAnimation {
 
     private final KeyframeAnimationMessageConfig messageConfig;
+    private final KeyframeAnimationPlugin plugin;
 
-    public CountdownAnimation(final KeyframeAnimationMessageConfig messageConfig) {
+    public CountdownAnimation(final KeyframeAnimationMessageConfig messageConfig,
+                              final KeyframeAnimationPlugin plugin) {
         this.messageConfig = messageConfig;
+        this.plugin = plugin;
     }
 
     /**
@@ -49,7 +52,9 @@ public final class CountdownAnimation implements KeyframeAnimation {
     public void display(final Player player, final Duration tickDelay, final KeyframeRenderer renderer) {
         Try.run(() -> {
             final List<Keyframe> keyframes = frames(messageConfig.numberOfFrames()).get();
-            KeyframeAnimationDispatcher.of(player, keyframes, renderer, tickDelay).dispatch();
+
+            final KeyframeAnimationDispatcher it = KeyframeAnimationDispatcher.of(player, keyframes, renderer, tickDelay, plugin);
+            it.dispatch();
         }).onFailure(e -> KeyframeLogger.logInfo("> Error in Countdown Animation" + e.getMessage()));
     }
 }
