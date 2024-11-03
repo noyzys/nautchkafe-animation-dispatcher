@@ -65,13 +65,23 @@ public final class LoadingProgressAnimation implements KeyframeAnimation {
      * @param tickDelay the delay between each tick/frame of the animation
      * @param renderer  the renderer utilized for rendering each keyframe
      */
-    @Override
-    public void display(final Player player, final Duration tickDelay, final KeyframeRenderer renderer) {
+    private void displayAnimation(Player player, Duration tickDelay, KeyframeRenderer renderer, int cycles) {
         Try.run(() -> {
-            final List<Keyframe> keyframes = frames(messageConfig.numberOfFrames()).get();
+            final List<Keyframe> keyframes = frames(cycles).get();
+            final KeyframeAnimationDispatcher dispatcher = KeyframeAnimationDispatcher.of(player, keyframes, renderer, tickDelay, plugin);
 
-            final KeyframeAnimationDispatcher it = KeyframeAnimationDispatcher.of(player, keyframes, renderer, tickDelay, plugin);
-            it.dispatch();
-        }).onFailure(e -> KeyframeLogger.logInfo("> Error in Loading Animation" + e.getMessage()));
+            dispatcher.dispatch();
+        }).onFailure(e -> KeyframeLogger.logInfo("> Error in Custom Character Animation: " + e.getMessage()));
+    }
+
+    /**
+     * Displays the animation by dispatching the keyframes to the specified player.
+     +
+     * @param player    the player to whom the animation frames are to be displayed
+     * @param tickDelay the delay between each tick/frame of the animation
+     */
+    @Override
+    public void display(final Player player, final Duration tickDelay) {
+        displayAnimation(player, tickDelay, KeyframeRenderer.miniMessageRenderer(), messageConfig.numberOfFrames());
     }
 }

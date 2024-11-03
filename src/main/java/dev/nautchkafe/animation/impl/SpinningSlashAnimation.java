@@ -16,11 +16,14 @@ public final class SpinningSlashAnimation implements KeyframeAnimation {
 
     private final KeyframeAnimationMessageConfig messageConfig;
     private final KeyframeAnimationPlugin plugin;
+    private final KeyframeMapper mapper;
 
     public SpinningSlashAnimation(final KeyframeAnimationMessageConfig messageConfig,
-                                  final KeyframeAnimationPlugin plugin) {
+                                  final KeyframeAnimationPlugin plugin,
+                                  final KeyframeMapper mapper) {
         this.messageConfig = messageConfig;
         this.plugin = plugin;
+        this.mapper = mapper;
     }
 
     /**
@@ -32,7 +35,8 @@ public final class SpinningSlashAnimation implements KeyframeAnimation {
     @Override
     public Supplier<List<Keyframe>> frames(final int cycles) {
         return () -> List.range(0, cycles)
-                .map(i -> createKeyframe(i % AnimationCharacter.SPINNING_CHARACTERS.size()));
+                .map(i -> mapper.findOrCache(i, index ->
+                        new Keyframe(messageConfig.titleMessage(), AnimationCharacter.SPINNING_CHARACTERS.get(index))));
     }
 
     /**
@@ -54,14 +58,23 @@ public final class SpinningSlashAnimation implements KeyframeAnimation {
      * @param tickDelay The duration between each frame of the animation.
      * @param renderer The renderer used to display each frame of the animation.
      */
-    @Override
-    public void display(final Player player, final Duration tickDelay, final KeyframeRenderer renderer) {
+    private void displayAnimation(Player player, Duration tickDelay, KeyframeRenderer renderer, int cycles) {
         Try.run(() -> {
-            final List<Keyframe> keyframes = frames(messageConfig.numberOfFrames()).get();
+            final List<Keyframe> keyframes = frames(cycles).get();
+            final KeyframeAnimationDispatcher dispatcher = KeyframeAnimationDispatcher.of(player, keyframes, renderer, tickDelay, plugin);
 
-            final KeyframeAnimationDispatcher it = KeyframeAnimationDispatcher.of(player, keyframes, renderer, tickDelay, plugin);
-            it.dispatch();
-        }).onFailure(e -> KeyframeLogger.logInfo("> Error in Spinning slash Animation" + e.getMessage()));
+            dispatcher.dispatch();
+        }).onFailure(e -> KeyframeLogger.logInfo("> Error in Custom Character Animation: " + e.getMessage()));
+    }
+
+    /**
+     * Displays the animation by dispatching the keyframes to the specified player.
+     +
+     * @param player    the player to whom the animation frames are to be displayed
+     * @param tickDelay the delay between each tick/frame of the animation
+     */
+    @Override
+    public void display(final Player player, final Duration tickDelay) {
+        displayAnimation(player, tickDelay, KeyframeRenderer.miniMessageRenderer(), messageConfig.numberOfFrames());
     }
 }
-

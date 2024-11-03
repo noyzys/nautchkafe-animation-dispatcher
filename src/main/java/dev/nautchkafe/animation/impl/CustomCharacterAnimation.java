@@ -44,13 +44,23 @@ public final class CustomCharacterAnimation implements KeyframeAnimation {
      * @param tickDelay the duration of delay between the display of each keyframe.
      * @param renderer  the renderer that displays the keyframe to the player.
      */
-    @Override
-    public void display(final Player player, final Duration tickDelay, final KeyframeRenderer renderer) {
+    private void displayAnimation(Player player, Duration tickDelay, KeyframeRenderer renderer, int cycles) {
         Try.run(() -> {
-            final List<Keyframe> keyframes = frames(messageConfig.numberOfFrames()).get();
+            final List<Keyframe> keyframes = frames(cycles).get();
+            final KeyframeAnimationDispatcher dispatcher = KeyframeAnimationDispatcher.of(player, keyframes, renderer, tickDelay, plugin);
 
-            final KeyframeAnimationDispatcher it = KeyframeAnimationDispatcher.of(player, keyframes, renderer, tickDelay, plugin);
-            it.dispatch();
-        }).onFailure(e -> KeyframeLogger.logInfo("> Error in Custom character Animation" + e.getMessage()));
+            dispatcher.dispatch();
+        }).onFailure(e -> KeyframeLogger.logInfo("> Error in Custom Character Animation: " + e.getMessage()));
+    }
+
+    /**
+     * Displays the animation by dispatching the keyframes to the specified player.
+     +
+     * @param player    the player to whom the animation frames are to be displayed
+     * @param tickDelay the delay between each tick/frame of the animation
+     */
+    @Override
+    public void display(final Player player, final Duration tickDelay) {
+        displayAnimation(player, tickDelay, KeyframeRenderer.miniMessageRenderer(), messageConfig.numberOfFrames());
     }
 }

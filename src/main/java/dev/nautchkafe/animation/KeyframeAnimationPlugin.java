@@ -31,23 +31,24 @@ public final class KeyframeAnimationPlugin extends JavaPlugin implements Listene
 
         // Countdown animation (reversed)
         final KeyframeAnimation countdownAnimation = new CountdownAnimation(config, this);
-        countdownAnimation.display(player, Duration.ofMillis(200), KeyframeRenderer.miniMessageRenderer());
+        countdownAnimation.display(player, Duration.ofMillis(200));
 
         // Loading animation
         final KeyframeAnimation loadingBarAnimation = new LoadingProgressAnimation(config, this);
-        loadingBarAnimation.display(player, Duration.ofMillis(200), KeyframeRenderer.miniMessageRenderer());
+        loadingBarAnimation.display(player, Duration.ofMillis(200));
 
-        // Spinning animation
-        final KeyframeAnimation spinningSlashAnimation = new SpinningSlashAnimation(config, this);
-        spinningSlashAnimation.display(player, Duration.ofMillis(200), KeyframeRenderer.miniMessageRenderer());
+        // Spinning animation and use cache for expired animations
+        final KeyframeMapper mapper = new KeyframeMapper();
+        final KeyframeAnimation spinningSlashAnimation = new SpinningSlashAnimation(config, this, mapper);
+        spinningSlashAnimation.display(player, Duration.ofMillis(200));
 
         // Wobble animation
         final KeyframeAnimation wobbleTextAnimation = new WobbleTextAnimation(config, this);
-        wobbleTextAnimation.display(player, Duration.ofMillis(200), KeyframeRenderer.miniMessageRenderer());
+        wobbleTextAnimation.display(player, Duration.ofMillis(200));
 
         // Custom animation
         final KeyframeAnimation customCharAnimation = new CustomCharacterAnimation(config, this);
-        customCharAnimation.display(player, Duration.ofMillis(200), KeyframeRenderer.miniMessageRenderer());
+        customCharAnimation.display(player, Duration.ofMillis(200));;
     }
 
     private void produceCustomKeyframeConfig(final Player player) {
@@ -71,13 +72,13 @@ public final class KeyframeAnimationPlugin extends JavaPlugin implements Listene
 
         final KeyframeAnimationDispatcher customDispatcher = KeyframeAnimationDispatcher.of(player, customKeyframesConfig,
                 KeyframeRenderer.miniMessageRenderer(),
-                Duration.ofSeconds(2), this
+                Duration.ofSeconds(20), this
         );
 
         customDispatcher.dispatch();
     }
 
-    private @NotNull KeyframeAnimationMessageConfig produceStandardConfig(final Player player) {
+    private KeyframeAnimationMessageConfig produceStandardConfig(final Player player) {
         final KeyframeAnimationMessageConfig config = new KeyframeAnimationMessageConfig(
                 "Title Message",
                 "Subtitle Message",
@@ -87,7 +88,7 @@ public final class KeyframeAnimationPlugin extends JavaPlugin implements Listene
 
         final KeyframeAnimationDispatcher instantDispatcher = KeyframeAnimationDispatcher.of(player, config,
                 KeyframeRenderer.miniMessageRenderer(),
-                Duration.ofSeconds(2), this
+                Duration.ofSeconds(10), this
         );
 
         instantDispatcher.dispatch();

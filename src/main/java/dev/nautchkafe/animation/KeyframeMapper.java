@@ -12,13 +12,13 @@ import java.util.concurrent.TimeUnit;
  * This class provides the functionality to retrieve a keyframe from the cache or create
  * a new one if it does not exist, using the provided keyframe creator function.
  */
-final class KeyframeMapper {
+public final class KeyframeMapper {
 
     private final Cache<Integer, Keyframe> keyframeCache;
 
-    KeyframeMapper() {
+    public KeyframeMapper() {
         keyframeCache = CacheBuilder.newBuilder()
-                .expireAfterWrite(10, TimeUnit.MINUTES)
+                .expireAfterWrite(3, TimeUnit.MINUTES)
                 .maximumSize(100)
                 .build();
     }
@@ -32,7 +32,7 @@ final class KeyframeMapper {
      * @param keyframeCreator a function that creates a keyframe for a given index
      * @return the retrieved or created keyframe
      */
-    public Keyframe getOrCache(final int index, final Function1<Integer, Keyframe> keyframeCreator) {
+    public Keyframe findOrCache(final int index, final Function1<Integer, Keyframe> keyframeCreator) {
         return Option.of(keyframeCache.getIfPresent(index))
                 .getOrElse(() -> {
                     final Keyframe keyframe = keyframeCreator.apply(index);

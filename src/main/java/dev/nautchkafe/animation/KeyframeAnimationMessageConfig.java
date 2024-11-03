@@ -36,26 +36,51 @@ public final class KeyframeAnimationMessageConfig {
         this(titleMessage, subtitleMessage, character, numberOfFrames, List.empty());
     }
 
+    /**
+     * Fetches title message for the keyframes.
+     * @return title message as a String.
+     */
     public String titleMessage() {
         return titleMessage;
     }
 
+    /**
+     * Fetches subtitle message for the keyframes.
+     * @return Subtitle message as a String.
+     */
     public String subtitleMessage() {
         return subtitleMessage;
     }
 
+    /**
+     * Fetches character for the keyframes.
+     * @return character as a String.
+     */
     public String character() {
         return character;
     }
 
+    /**
+     * Returns the number of frames.
+     *
+     * @return the number of frames as an integer.
+     */
     public int numberOfFrames() {
         return numberOfFrames;
     }
 
+    /**
+     * Returns the appropriate list of keyframes, either a custom list if non-empty, or a generated default list.
+     * @return A list of {@link Keyframe} objects.
+     */
     public List<Keyframe> customKeyframes() {
         return customKeyframes.isEmpty() ? generateDefaultKeyframes() : customKeyframes;
     }
 
+    /**
+     * Generates a default list of keyframes.
+     * @return A list of generated {@link Keyframe} objects with default settings.
+     */
     private List<Keyframe> generateDefaultKeyframes() {
         final String subTitleWithCharacter = subtitleMessage() + " " + character();
         return List.range(0, numberOfFrames)

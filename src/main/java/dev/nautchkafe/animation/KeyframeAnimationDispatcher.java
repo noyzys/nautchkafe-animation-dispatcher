@@ -12,7 +12,6 @@ public final class KeyframeAnimationDispatcher {
 
     private final Player player;
     private final List<Keyframe> keyframes;
-    private final KeyframeRenderer renderer;
     private final Duration tickDelay;
     private final KeyframeAnimationPlugin plugin;
 
@@ -20,7 +19,6 @@ public final class KeyframeAnimationDispatcher {
                                         final Duration tickDelay, final KeyframeAnimationPlugin plugin) {
         this.player = player;
         this.keyframes = keyframes;
-        this.renderer = renderer;
         this.tickDelay = tickDelay;
         this.plugin = plugin;
     }
@@ -72,6 +70,6 @@ public final class KeyframeAnimationDispatcher {
      */
     public void dispatch() {
         final KeyframeAnimationTask animationTask = KeyframeAnimationTask.create(player, keyframes, tickDelay);
-        animationTask.runTaskTimer(plugin, 0, tickDelay.toMillis() / 50);
+        animationTask.runTaskTimerAsynchronously(plugin, 0, tickDelay.toMillis() / 50);
     }
 }

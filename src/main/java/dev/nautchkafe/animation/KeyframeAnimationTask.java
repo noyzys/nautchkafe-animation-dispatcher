@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.Duration;
+import java.util.function.BiConsumer;
 
 /**
  * KeyframeAnimationTask is a final class that extends BukkitRunnable to handle the animation sequence for a player.
@@ -15,14 +16,13 @@ import java.time.Duration;
 final class KeyframeAnimationTask extends BukkitRunnable {
 
     private final Player player;
+    private final Lazy<List<Keyframe>> lazyKeyframes;
     private KeyframeAnimationState animationState;
-    private final KeyframeRenderer renderer;
+    private final BiConsumer<Player, Keyframe> renderer;
     private final KeyframeAnimationScheduler scheduler;
 
-    private final Lazy<List<Keyframe>> lazyKeyframes;
-
     private KeyframeAnimationTask(final Player player, final KeyframeAnimationState animationState,
-                                  final KeyframeRenderer renderer, final KeyframeAnimationScheduler scheduler,
+                                  final BiConsumer<Player, Keyframe> renderer, final KeyframeAnimationScheduler scheduler,
                                   final Lazy<List<Keyframe>> lazyKeyframes) {
         this.player = player;
         this.animationState = animationState;
@@ -68,37 +68,35 @@ final class KeyframeAnimationTask extends BukkitRunnable {
                                                       final Duration tickDelay) {
         final KeyframeAnimationState state = new KeyframeAnimationState(keyframes);
         final KeyframeAnimationScheduler scheduler = KeyframeAnimationScheduler.create(tickDelay);
-        final KeyframeRenderer renderer = KeyframeRenderer.miniMessageRenderer();
+
+        final BiConsumer<Player, Keyframe> renderFunction = (audience, keyframe) -> Try.run(() -> {
+                    final KeyframeRenderer renderer = KeyframeRenderer.miniMessageRenderer();
+                    renderer.render(audience, keyframe, scheduler.tickDelay());
+                }).onFailure(e -> KeyframeLogger.logInfo("> Error rendering keyframe: " + e.getMessage()));
+
+
         final Lazy<List<Keyframe>> lazyKeyframes = Lazy.of(() -> keyframes);
 
-        return new KeyframeAnimationTask(player, state, renderer, scheduler, lazyKeyframes);
+        return new KeyframeAnimationTask(player, state, renderFunction, scheduler, lazyKeyframes);
     }
 
     /**
      * Transforms animation message configurations into a list of keyframes.
      *
      * @param config Configuration from which keyframes are derived.
+     * @keyframeLimit - limit for keyframe default  set 100, change for performance
      * @return List of created keyframes based on configuration.
      */
     private static List<Keyframe> createKeyframes(final KeyframeAnimationMessageConfig config) {
-        final String subtitleWithCharacter = config.subtitleMessage() + " " + config.character();
-        final int keyframeLimit = Math.min(config.numberOfFrames(), 100);
+        final KeyframeSupplier keyframeSupplier = () -> {
+            final String subtitleWithCharacter = config.subtitleMessage() + " " + config.character();
+            final int keyframeLimit = Math.min(config.numberOfFrames(), 100);
 
-        return List.range(0, keyframeLimit)
-                .map(i -> new Keyframe(config.titleMessage(), subtitleWithCharacter));
-    }
+            return List.range(0, keyframeLimit)
+                    .map(i -> new Keyframe(config.titleMessage(), subtitleWithCharacter));
+        };
 
-    /**
-     * Overridden run method that handles frame updates and checks the activity of the animation.
-     */
-    @Override
-    public void run() {
-        if (!isAnimationActive()) {
-            cancel();
-            return;
-        }
-
-        updateAnimation();
+        return keyframeSupplier.get();
     }
 
     /**
@@ -118,15 +116,23 @@ final class KeyframeAnimationTask extends BukkitRunnable {
             final List<Keyframe> keyframes = lazyKeyframes.get();
 
             animationState = new KeyframeAnimationState(keyframes);
-
-            animationState.currentFrame()
-                    .peek(keyframe -> Try.run(() -> renderer.render(player, keyframe, scheduler.tickDelay()))
-                            .onFailure(e -> {
-                                cancel();
-                            }));
+            animationState.currentFrame().peek(keyframe -> renderer.accept(player, keyframe));
 
             animationState = animationState.nextFrame();
             scheduler.withUpdatedFrameTime();
         }
+    }
+
+    /**
+     * Overridden run method that handles frame updates and checks the activity of the animation.
+     */
+    @Override
+    public void run() {
+        if (!isAnimationActive()) {
+            cancel();
+            return;
+        }
+
+        updateAnimation();
     }
 }

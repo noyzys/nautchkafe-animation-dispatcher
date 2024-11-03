@@ -9,7 +9,7 @@ import java.time.Duration;
  * Functional Interface that defines a method for executing key frames over a specified duration for a player.
  */
 @FunctionalInterface
-public interface KeyFrameExecutor {
+public interface KeyframeExecutor {
 
     /**
      * Executes a sequence of key frames for the given player with a specified tick delay.

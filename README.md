@@ -14,20 +14,52 @@ KeyframeAnimationMessageConfig config = new KeyframeAnimationMessageConfig(
 ```
 
 # Example
+<p align="center">
+  <img src="resources/ij1.jpg" alt="Ij 1" width="1679"/>
+  <img src="resources/ij2.jpg" alt="Ij 2" width="1679"/>
+  <img src="resources/ij3.jpg" alt="Ij 3" width="1679"/>
+</p>
+
 ```java
-final Player player = event.getPlayer();
-final KeyframeAnimationMessageConfig config = new KeyframeAnimationMessageConfig(
+Player player = event.getPlayer();
+KeyframeAnimationMessageConfig config = new KeyframeAnimationMessageConfig(
         "Title Message", 
         "Subtitle Message", 
         "", 
         5
 );
 	
-// Create and dispatch the animation
-KeyframeAnimationDispatcher.of(player, config, 
-    KeyframeRenderer.miniMessageRenderer(), // Use a renderer for displaying the animation
-    Duration.ofSeconds(2) // Set the delay between each frame
+// Create and dispatch standard the animation
+KeyframeAnimationDispatcher instantDispatcher = KeyframeAnimationDispatcher.of(player, config,
+        KeyframeRenderer.miniMessageRenderer(),
+        Duration.ofSeconds(10), this
 );
+
+        instantDispatcher.dispatch();
+```
+
+```java
+// Create custom keyframes animation
+List<Keyframe> customKeyFrames = List.of(
+        new Keyframe("S", "s"),
+        new Keyframe("U", "u"),
+        new Keyframe("S", "s")
+);
+
+KeyframeAnimationMessageConfig customKeyframesConfig = new KeyframeAnimationMessageConfig(
+        "Start Title",
+        "Start subtitle",
+        "",
+        10,
+        customKeyFrames
+);
+
+KeyframeAnimationDispatcher customDispatcher = KeyframeAnimationDispatcher.of(player, customKeyframesConfig,
+        KeyframeRenderer.miniMessageRenderer(),
+        Duration.ofSeconds(20), this
+);
+
+        customDispatcher.dispatch();
 ```
 
 # Additional Implementations

@@ -16,7 +16,6 @@ public interface KeyframeAnimation extends KeyframeSource {
      *
      * @param player the player to whom the animation is to be displayed
      * @param tickDelay the duration of delay between each tick
-     * @param renderer the renderer used to display the animation
      */
-    void display(final Player player, final Duration tickDelay, final KeyframeRenderer renderer);
+    void display(final Player player, final Duration tickDelay);
 }
