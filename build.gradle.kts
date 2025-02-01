@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     // fp stuff
-    implementation("io.vavr:vavr:0.10.5")
+    implementation("io.vavr:vavr:0.10.6")
 
     // minecraft server-side software stuff
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
