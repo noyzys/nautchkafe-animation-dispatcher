@@ -30,7 +30,7 @@ dependencies {
     implementation("net.kyori.adventure:adventure-text-minimessage:4.11.0")
 
     // tests stuff
-    testImplementation(platform("org.junit:junit-bom:5.11.4"))
+    testImplementation(platform("org.junit:junit-bom:5.12.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.mockito:mockito-core:5.15.2")
     testImplementation("org.mockito:mockito-inline:5.2.0")
