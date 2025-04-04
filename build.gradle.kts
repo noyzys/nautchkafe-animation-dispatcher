@@ -32,7 +32,7 @@ dependencies {
     // tests stuff
     testImplementation(platform("org.junit:junit-bom:5.12.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.mockito:mockito-core:5.16.1")
+    testImplementation("org.mockito:mockito-core:5.17.0")
     testImplementation("org.mockito:mockito-inline:5.2.0")
 }
 
