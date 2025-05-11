@@ -26,7 +26,7 @@ dependencies {
 
     // kyori stuff
     implementation("net.kyori.adventure:adventure-api:4.11.0")
-    implementation("net.kyori:adventure-platform-bukkit:4.3.4")
+    implementation("net.kyori:adventure-platform-bukkit:4.4.0")
     implementation("net.kyori.adventure:adventure-text-minimessage:4.11.0")
 
     // tests stuff
