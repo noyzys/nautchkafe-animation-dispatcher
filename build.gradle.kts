@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    kotlin("jvm") version "2.1.20"
+    kotlin("jvm") version "2.2.0"
 }
 
 group = "dev.nautchkafe.animation"
@@ -30,7 +30,7 @@ dependencies {
     implementation("net.kyori.adventure:adventure-text-minimessage:4.11.0")
 
     // tests stuff
-    testImplementation(platform("org.junit:junit-bom:5.13.1"))
+    testImplementation(platform("org.junit:junit-bom:5.13.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.mockito:mockito-core:5.17.0")
     testImplementation("org.mockito:mockito-inline:5.2.0")
