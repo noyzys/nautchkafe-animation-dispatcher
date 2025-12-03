@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     // fp stuff
-    implementation("io.vavr:vavr:0.10.6")
+    implementation("io.vavr:vavr:0.10.7")
 
     // minecraft server-side software stuff
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
@@ -26,7 +26,7 @@ dependencies {
 
     // kyori stuff
     implementation("net.kyori.adventure:adventure-api:4.11.0")
-    implementation("net.kyori:adventure-platform-bukkit:4.4.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.4.1")
     implementation("net.kyori.adventure:adventure-text-minimessage:4.11.0")
 
     // tests stuff
