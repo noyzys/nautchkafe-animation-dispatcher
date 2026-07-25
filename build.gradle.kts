@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    kotlin("jvm") version "2.2.21"
+    kotlin("jvm") version "2.4.10"
 }
 
 group = "dev.nautchkafe.animation"
