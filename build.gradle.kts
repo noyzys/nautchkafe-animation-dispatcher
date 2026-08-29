@@ -18,10 +18,10 @@ repositories {
 
 dependencies {
     // fp stuff
-    implementation("io.vavr:vavr:0.10.6")
+    implementation("io.vavr:vavr:1.0.1")
 
     // minecraft server-side software stuff
-    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.121-stable")
     compileOnly("org.spigotmc:spigot-api:1.20.1-experimental-SNAPSHOT")
 
     // kyori stuff
